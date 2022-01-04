@@ -6,7 +6,7 @@
 * Table of Contents :TOC_3:noexport:
 - [[#description][Description]]
 - [[#install][Install]]
-  - [[#for-doom-emacs-users][For Doom Emacs users]]
+  - [[#for-users-of-doom-emacs][For users of Doom Emacs]]
 - [[#similar-packages][Similar packages]]
 - [[#hacks--bugs][Hacks / Bugs]]
 
@@ -15,7 +15,7 @@ This package implements Evil state compatibility for EXWM applications.
 
 * Install
 
-** For Doom Emacs users
+** For users of Doom Emacs
 Add the following snippet to your ~packages.el~ file:
 #+begin_src elisp
 (package! exwm-evil :recipe
