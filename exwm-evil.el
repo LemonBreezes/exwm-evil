@@ -75,7 +75,7 @@ enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
   (if exwm-evil-mode
       (progn (exwm-evil-normal)
-             (unless exwm-evil-disable-mouse-workaround
+             (when exwm-evil-enable-mouse-workaround
                (advice-add #'exwm-input--on-ButtonPress-line-mode
                            :override
                            #'exwm-evil--on-ButtonPress-line-mode)))
