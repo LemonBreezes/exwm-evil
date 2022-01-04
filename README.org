@@ -59,7 +59,7 @@ https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501.
 
 If you would like to enable this workaround, you may add
 #+begin_src elisp
-(setq exwm-evil-enable-mouse-workaround t)
+(exwm-evil-enable-mouse-workaround)
 #+end_src
 
 to your personal configuration.

@@ -66,6 +66,13 @@ button event."
         ;; The event should be replayed
         xcb:Allow:ReplayPointer))))
 
+(defun exwm-evil-enable-mouse-workaround ()
+  "Enables a workaround which allows for mouse events to be sent to an
+application during the normal state."
+  (advice-add #'exwm-input--on-ButtonPress-line-mode
+              :override
+              #'exwm-evil--on-ButtonPress-line-mode))
+
 ;;;###autoload
 (define-minor-mode exwm-evil-mode
   "Toggle the EXWM Evil mode.
@@ -73,14 +80,8 @@ button event."
 The EXWM Evil mode should only be enabled in EXWM buffers. When
 enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
-  (if exwm-evil-mode
-      (progn (exwm-evil-normal)
-             (when exwm-evil-enable-mouse-workaround
-               (advice-add #'exwm-input--on-ButtonPress-line-mode
-                           :override
-                           #'exwm-evil--on-ButtonPress-line-mode)))
-    (advice-remove #'exwm-input--on-ButtonPress-line-mode
-                   #'exwm-evil--on-ButtonPress-line-mode)))
+  (when exwm-evil-mode
+    (exwm-evil-normal)))
 
 (define-key exwm-evil-mode-map [remap evil-normal-state] 'exwm-evil-normal)
 (define-key exwm-evil-mode-map [remap evil-force-normal-state] 'exwm-evil-normal)
