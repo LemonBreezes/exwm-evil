@@ -70,4 +70,3 @@ to your personal configuration.
 :END:
 
 - +Implement some basic motion commands like ~exwm-evil-core-up~+
-- Implement functions for controlling the Chrome browser
