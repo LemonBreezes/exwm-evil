@@ -97,6 +97,10 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #' exwm-evil-core-top)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "G") #' exwm-evil-core-bottom)
 
+(evil-define-key 'normal exwm-evil-mode-map (kbd "+") #' exwm-evil-core-zoom-in)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "-") #' exwm-evil-core-zoom-out)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "=") #' exwm-evil-core-reset-zoom)
+
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<next>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<prior>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<return>") #'exwm-evil-core-send-this-key)
@@ -106,7 +110,6 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<right>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<down>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<up>") #'exwm-evil-core-send-this-key)
-
 
 (provide 'exwm-evil)
 
