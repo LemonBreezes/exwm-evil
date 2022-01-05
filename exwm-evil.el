@@ -32,6 +32,7 @@
 
 (defvar exwm-evil-mode-map (make-sparse-keymap))
 (defvar exwm-evil-disable-mouse-workaround nil)
+(defvar exwm-evil-input-delay 0.06)
 
 (defun exwm-evil-normal ()
   "Pass every key directly to Emacs."
@@ -47,10 +48,10 @@
 
 (defmacro exwm-evil-command (key)
   `(evil-define-motion ,(intern (concat "exwm-evil-core-" (symbol-name key))) (count)
-     (concat "Send " (symbol-name ',key) " COUNT times.")
-    (cl-dotimes (_ (or count 1))
-      (exwm-input--fake-key ',key))))
-
+    (cl-dotimes (i (or count 1))
+      (run-at-time (* i exwm-evil-input-delay) nil
+                   (lambda (&rest _)
+                     (exwm-input--fake-key ',key))))))
 
 ;; HACK See https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501
 (defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
