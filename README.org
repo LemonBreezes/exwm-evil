@@ -57,7 +57,7 @@ In order to use the mouse in EXWM applications during normal state, we have
 implemented the workaround in
 https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501.
 
-If you would like to enable this workaround, you may add
+If you would like to enable this workaround, add:
 #+begin_src elisp
 (exwm-evil-enable-mouse-workaround)
 #+end_src
