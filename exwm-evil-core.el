@@ -60,4 +60,16 @@
   "Send this key to the application COUNT times."
   (exwm-evil-send-key count (aref (this-command-keys-vector) 0)))
 
+(evil-define-motion exwm-evil-paste ()
+  "Pastes text from the clipboard."
+  (exwm-input--fake-key ?\C-v))
+
+(evil-define-motion exwm-evil-copy ()
+  "Pastes text from the clipboard."
+  (exwm-input--fake-key ?\C-c))
+
+(evil-define-motion exwm-evil-cut ()
+  "Pastes text from the clipboard."
+  (exwm-input--fake-key ?\C-x))
+
 (provide 'exwm-evil-core)
