@@ -30,9 +30,11 @@
 (require 'exwm-input)
 (require 'exwm-evil-core)
 
-(defvar exwm-evil-mode-map (make-sparse-keymap))
-(defvar exwm-evil-disable-mouse-workaround nil)
-(defvar exwm-evil-input-delay 0.06)
+(defvar exwm-evil-mode-map (make-sparse-keymap)
+  "Keymap for `exwm-evil-mode'.")
+(defvar exwm-evil-input-delay 0.06
+  "The delay between bundled keypresses. If you set it too low, not every key
+press will register.")
 
 (defun exwm-evil-normal ()
   "Pass every key directly to Emacs."
@@ -47,6 +49,7 @@
   (evil-insert-state))
 
 (defun exwm-evil-send-key (count key)
+  "Sends KEY to the application COUNT times."
   (when (and (integerp count) (> count 50))
     (message "Truncating COUNT to 50. Do not use a large COUNT for EXWM Evil commands.")
     (setq count 50))
@@ -56,6 +59,7 @@
                     (exwm-input--fake-key ',key)))))
 
 (defmacro exwm-evil-command (key)
+  "Defines an EXWM Evil command for KEY."
   `(evil-define-motion ,(intern (concat "exwm-evil-core-" (symbol-name key))) (count)
      (exwm-evil-send-key count ',key)))
 
