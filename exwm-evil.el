@@ -45,6 +45,13 @@
   (setq-local exwm-input-line-mode-passthrough nil)
   (evil-insert-state))
 
+(defmacro exwm-evil-command (key)
+  `(evil-define-motion ,(intern (concat "exwm-evil-core-" (symbol-name key))) (count)
+     (concat "Send " (symbol-name ',key) " COUNT times.")
+    (cl-dotimes (_ (or count 1))
+      (exwm-input--fake-key ',key))))
+
+
 ;; HACK See https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501
 (defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
   "Handle button events in line mode.
@@ -96,6 +103,21 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "l") #' exwm-evil-core-right)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #' exwm-evil-core-top)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "G") #' exwm-evil-core-bottom)
+;; Now bind all modified versions of these keys
+(evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-j") (exwm-evil-command C-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-j") (exwm-evil-command M-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-k") (exwm-evil-command C-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-k") (exwm-evil-command M-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-J") (exwm-evil-command S-C-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-J") (exwm-evil-command S-M-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-K") (exwm-evil-command C-S-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-K") (exwm-evil-command M-S-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-M-j") (exwm-evil-command C-M-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-M-k") (exwm-evil-command C-M-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-j") (exwm-evil-command S-C-M-down))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-k") (exwm-evil-command S-C-M-up))
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "+") #' exwm-evil-core-zoom-in)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "-") #' exwm-evil-core-zoom-out)
