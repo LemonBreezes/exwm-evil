@@ -106,6 +106,9 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "G") #'exwm-evil-core-bottom)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "a") #'exwm-evil-core-append)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "A") #'exwm-evil-core-append-line)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "0") #'exwm-evil-core-beginning-of-line)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "$") #'exwm-evil-core-end-of-line)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "u") #'exwm-evil-core-undo)
 ;; Now bind all modified versions of these keys
 (evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
