@@ -120,4 +120,9 @@
   "Undo COUNT times."
   (exwm-evil-send-key count ?\C-z))
 
+(defun exwm-evil-core-cut ()
+  "Cut text."
+  (interactive)
+  (exwm-input--fake-key ?\C-x))
+
 (provide 'exwm-evil-core)
