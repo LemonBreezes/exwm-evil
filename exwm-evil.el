@@ -45,7 +45,8 @@ press will register.")
   "Pass every key directly to Emacs."
   (interactive)
   (setq-local exwm-input-line-mode-passthrough t
-              exwm-evil-visual-state-enabled nil)
+              exwm-evil-visual-state-enabled nil
+              exwm--input-mode 'line-mode)
   (kill-local-variable 'exwm-input-prefix-keys)
   (evil-normal-state))
 
