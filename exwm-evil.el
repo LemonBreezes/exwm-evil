@@ -165,10 +165,11 @@ enabled, Evil's normal state will automatically be entered."
                   (mapcar #'car (evil-state-property t :modes)))))
       (when state (evil-change-state state)))))
 
-(defun enable-exwm-evil-mode ()
+(defun enable-exwm-evil-mode (&rest _)
   "Turns on Evil mode for the current EXWM buffer."
   (interactive)
-  (exwm-evil-mode +1))
+  (when (derived-mode-p 'exwm-mode)
+    (exwm-evil-mode +1)))
 
 (define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-normal-state)
 (define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-normal-state)
