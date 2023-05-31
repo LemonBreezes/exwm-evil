@@ -4,18 +4,22 @@
 #+STARTUP: inlineimages nofold
 
 * Table of Contents :TOC_3:noexport:
+
 - [[#description][Description]]
 - [[#install][Install]]
   - [[#for-users-of-doom-emacs][For users of Doom Emacs]]
 - [[#similar-packages][Similar packages]]
 - [[#hacks--bugs][Hacks / Bugs]]
+- [[#future-direction][Future direction]]
 
 * Description
+
 This package implements Evil state compatibility for EXWM applications.
 
 * Install
 
 ** For users of Doom Emacs
+
 Add the following snippet to your ~packages.el~ file:
 #+begin_src elisp
 (package! exwm-evil :recipe
@@ -42,11 +46,13 @@ gets passed to the target application. To send escape, you must type
 ~C-c C-i~. Similarly, to send ~C-c~, you must type ~C-c C-c~.
 
 * Similar packages
+
 This package was heavily inspired by [[https://github.com/walseb/exwm-firefox-evil][EXWM Firefox Evil]] but is much more
-barebones as it does not provide any motion nor selection commands for
+barebones as it currently does not provide any motion nor selection commands for
 applications.
 
 * Hacks / Bugs
+
 In order to use the mouse in EXWM applications during normal state, we have
 implemented the workaround in
 https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501.
@@ -57,3 +63,10 @@ If you would like to enable this workaround, you may add
 #+end_src
 
 to your personal configuration.
+
+* Future direction
+:PROPERTIES:
+:CREATED_TIME: [2022-01-04 Tue 12:33]
+:END:
+
+- [ ] Implement some basic motion commands like ~exwm-evil-core-up~
