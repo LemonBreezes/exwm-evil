@@ -88,12 +88,14 @@
   "Pass every key directly to Emacs."
   (interactive)
   (setq-local exwm-input-line-mode-passthrough t)
+  (kill-local-variable 'exwm-input-prefix-keys)
   (evil-normal-state))
 
 (defun exwm-evil-core-insert ()
   "Pass every key directly to the application."
   (interactive)
-  (setq-local exwm-input-line-mode-passthrough nil)
+  (setq-local exwm-input-line-mode-passthrough nil
+              exwm-input-prefix-keys '(escape))
   (evil-insert-state))
 
 (evil-define-motion exwm-evil-core-append ()
