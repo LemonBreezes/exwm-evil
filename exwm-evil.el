@@ -47,10 +47,13 @@
   (evil-insert-state))
 
 (defun exwm-evil-send-key (count key)
+  (when (and (integerp count) (> count 99))
+    (message "Truncating COUNT to 99. Do not use a large COUNT for EXWM Evil commands.")
+    (setq count 99))
   (cl-dotimes (i (or count 1))
     (run-at-time (* i exwm-evil-input-delay) nil
                  `(lambda (&rest _)
-                   (exwm-input--fake-key ',key)))))
+                    (exwm-input--fake-key ',key)))))
 
 (defmacro exwm-evil-command (key)
   `(evil-define-motion ,(intern (concat "exwm-evil-core-" (symbol-name key))) (count)
