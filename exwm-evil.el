@@ -213,7 +213,7 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<C-deletechar>") (exwm-evil-command C-delete))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<C-backspace>") (exwm-evil-command C-backspace))
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "p") (exwm-evil-command C-p))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "p") (exwm-evil-command C-v))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "y") (exwm-evil-command C-c))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "x") (exwm-evil-command backspace))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "+") (exwm-evil-command C-+))
