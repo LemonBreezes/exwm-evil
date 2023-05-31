@@ -155,9 +155,9 @@ enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
   (if exwm-evil-mode
       (exwm-evil-normal-state)
-    (kill-local-variable exwm-input-line-mode-passthrough)
-    (kill-local-variable exwm-input-prefix-keys)
-    (kill-local-variable exwm-evil-visual-state-enabled)))
+    (kill-local-variable 'exwm-input-line-mode-passthrough)
+    (kill-local-variable 'exwm-input-prefix-keys)
+    (kill-local-variable 'exwm-evil-visual-state-enabled)))
 
 (defun enable-exwm-evil-mode (&rest _)
   "Turns on Evil mode for the current EXWM buffer."
