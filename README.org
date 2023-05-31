@@ -8,7 +8,7 @@
 - [[#install][Install]]
   - [[#for-doom-emacs-users][For Doom Emacs users]]
 - [[#similar-packages][Similar packages]]
-- [[#known-bugs][Known bugs]]
+- [[#hacks--bugs][Hacks / Bugs]]
 
 * Description
 This package implements Evil state compatibility for EXWM applications.
@@ -46,5 +46,14 @@ This package was heavily inspired by [[https://github.com/walseb/exwm-firefox-ev
 barebones as it does not provide any motion nor selection commands for
 applications.
 
-* Known bugs
-The mouse currently only works for EXWM applications during insert state.
+* Hacks / Bugs
+In order to use the mouse in EXWM applications during normal state, we have
+implemented the workaround in
+https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501.
+
+If you would like to disable this workaround, you may add
+#+begin_src elisp
+(setq exwm-evil-disable-mouse-workaround t)
+#+end_src
+
+to your personal configuration.

@@ -23,12 +23,15 @@
 
 ;; This package implements Evil states for EXWM applications.
 
+;;; Code:
 (require 'evil)
 (require 'evil-core)
 (require 'exwm)
 (require 'exwm-input)
 
-;;; Code:
+(defvar exwm-evil-mode-map (make-sparse-keymap))
+(defvar exwm-evil-disable-mouse-workaround nil)
+
 (defun exwm-evil-normal ()
   "Pass every key directly to Emacs."
   (interactive)
@@ -41,7 +44,27 @@
   (setq-local exwm-input-line-mode-passthrough nil)
   (evil-insert-state))
 
-(defvar exwm-evil-mode-map (make-sparse-keymap))
+;; HACK See https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501
+(defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
+  "Handle button events in line mode.
+BUFFER is the `exwm-mode' buffer the event was generated
+on. BUTTON-EVENT is the X event converted into an Emacs event.
+
+The return value is used as event_mode to release the original
+button event."
+  (with-current-buffer buffer
+    (let ((read-event (exwm-input--mimic-read-event button-event)))
+      (exwm--log "%s" read-event)
+      (if (and read-event
+               (exwm-input--event-passthrough-p read-event))
+          ;; The event should be forwarded to emacs
+          (progn
+            (exwm-input--cache-event read-event)
+            (exwm-input--unread-event button-event)
+
+            xcb:Allow:ReplayPointer)
+        ;; The event should be replayed
+        xcb:Allow:ReplayPointer))))
 
 ;;;###autoload
 (define-minor-mode exwm-evil-mode
@@ -50,8 +73,14 @@
 The EXWM Evil mode should only be enabled in EXWM buffers. When
 enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
-  (when exwm-evil-mode
-    (exwm-evil-normal)))
+  (if exwm-evil-mode
+      (progn (exwm-evil-normal)
+             (unless exwm-evil-disable-mouse-workaround
+               (advice-add #'exwm-input--on-ButtonPress-line-mode
+                           :override
+                           #'exwm-evil--on-ButtonPress-line-mode)))
+    (advice-remove #'exwm-input--on-ButtonPress-line-mode
+                   #'exwm-evil--on-ButtonPress-line-mode)))
 
 (define-key exwm-evil-mode-map [remap evil-normal-state] 'exwm-evil-normal)
 (define-key exwm-evil-mode-map [remap evil-force-normal-state] 'exwm-evil-normal)
