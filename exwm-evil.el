@@ -28,6 +28,7 @@
 (require 'evil-core)
 (require 'exwm)
 (require 'exwm-input)
+(require 'exwm-evil-core)
 
 (defvar exwm-evil-mode-map (make-sparse-keymap))
 (defvar exwm-evil-disable-mouse-workaround nil)
@@ -88,6 +89,14 @@ enabled, Evil's normal state will automatically be entered."
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "i") #'exwm-evil-insert)
 (evil-define-key 'insert exwm-evil-mode-map (kbd "<escape>") #'exwm-evil-normal)
+
+(evil-define-key 'normal exwm-evil-mode-map (kbd "j") #' exwm-evil-core-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "k") #' exwm-evil-core-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "h") #' exwm-evil-core-left)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "l") #' exwm-evil-core-right)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<next>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<prior>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<return>") #'exwm-evil-core-send-this-key)
 
 (provide 'exwm-evil)
 
