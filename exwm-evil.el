@@ -98,18 +98,20 @@ enabled, Evil's normal state will automatically be entered."
   (when exwm-evil-mode
     (exwm-evil-normal)))
 
-(define-key exwm-evil-mode-map [remap evil-normal-state] 'exwm-evil-normal)
-(define-key exwm-evil-mode-map [remap evil-force-normal-state] 'exwm-evil-normal)
+(define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-normal)
+(define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-normal)
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "i") #'exwm-evil-insert)
 (evil-define-key 'insert exwm-evil-mode-map (kbd "<escape>") #'exwm-evil-normal)
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "j") #' exwm-evil-core-down)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "k") #' exwm-evil-core-up)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "h") #' exwm-evil-core-left)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "l") #' exwm-evil-core-right)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #' exwm-evil-core-top)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "G") #' exwm-evil-core-bottom)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "j") #'exwm-evil-core-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "k") #'exwm-evil-core-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "h") #'exwm-evil-core-left)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "l") #'exwm-evil-core-right)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "e") #'exwm-evil-core-forward-word)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "b") #'exwm-evil-core-backward-word)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #'exwm-evil-core-top)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "G") #'exwm-evil-core-bottom)
 ;; Now bind all modified versions of these keys
 (evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
@@ -126,9 +128,9 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-j") (exwm-evil-command S-C-M-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-k") (exwm-evil-command S-C-M-up))
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "p") #'exwm-evil-paste)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "y") #'exwm-evil-copy)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "x") #'exwm-evil-cut)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "p") #'exwm-evil-core-paste)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "y") #'exwm-evil-core-copy)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "x") #'exwm-evil-core-cut)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "+") #'exwm-evil-core-zoom-in)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "-") #'exwm-evil-core-zoom-out)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "=") #'exwm-evil-core-reset-zoom)
