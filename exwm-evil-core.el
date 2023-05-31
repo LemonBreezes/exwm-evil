@@ -106,4 +106,16 @@
   (exwm-input--fake-key 'end)
   (exwm-evil-core-insert))
 
+(evil-define-motion exwm-evil-core-beginning-of-line ()
+  "Move backwards to the beginning of the current line."
+  (exwm-input--fake-key 'home))
+
+(evil-define-motion exwm-evil-core-end-of-line ()
+  "Move forwards to the end of the current line."
+  (exwm-input--fake-key 'end))
+
+(evil-define-motion exwm-evil-core-undo (count)
+  "Undo COUNT times."
+  (exwm-evil-send-key count ?\C-z))
+
 (provide 'exwm-evil-core)
