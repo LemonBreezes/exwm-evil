@@ -139,7 +139,7 @@ press will register.")
 state."
   (interactive)
   (exwm-input--fake-key 'home)
-  (evil-insert))
+  (exwm-evil-core-insert))
 
 (defun exwm-evil-core-copy-all ()
   "Copy everything."
