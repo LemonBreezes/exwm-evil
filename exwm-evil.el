@@ -111,6 +111,8 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "u") #'exwm-evil-core-undo)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "d") #'exwm-evil-core-cut)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "D") #'exwm-evil-core-cut)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<deletechar>") (exwm-evil-command delete))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<backspace>") (exwm-evil-command backspace))
 ;; Now bind all modified versions of these keys
 (evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
@@ -126,6 +128,8 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-M-k") (exwm-evil-command S-M-up))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-j") (exwm-evil-command S-C-M-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-k") (exwm-evil-command S-C-M-up))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<C-deletechar>") (exwm-evil-command C-delete))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<C-backspace>") (exwm-evil-command C-backspace))
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "p") #'exwm-evil-core-paste)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "y") #'exwm-evil-core-copy)
