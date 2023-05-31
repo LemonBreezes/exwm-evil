@@ -130,4 +130,8 @@
   (exwm-input--fake-key 'delete)
   (exwm-evil-core-insert))
 
+(defun exwm-evil-core-select-all ()
+  "Select everything."
+  (exwm-input--fake-key ?\C-a))
+
 (provide 'exwm-evil-core)

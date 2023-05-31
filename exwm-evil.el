@@ -70,6 +70,25 @@ press will register.")
   (setq-local exwm-evil-visual-state-enabled
               (not exwm-evil-visual-state-enabled)))
 
+;; (= (- ?z ?a) (- ?\C-z ?\C-a)) => t
+;; (= (- ?z ?a) (- ?\M-z ?\M-a)) => t
+;; (= (- ?z ?a) (- ?\C-\M-z ?\C-\M-a)) => t
+(defun exwm-evil--get-key-symbol (key)
+  (concat "exwm-evil-core-"
+          (if (ignore-errors (integerp key))
+              (cond ((<= ?\C-a key ?\C-z)
+                     (concat "C-" (char-to-string
+                                   (+ (- key ?\C-a) ?a))))
+                    ((<= ?\M-a key ?\M-z)
+                     (concat "M-" (char-to-string (+ (- key ?\M-a) ?a))))
+                    ((<= ?\C-\M-a key ?\C-\M-z)
+                     (concat "C-M-" (char-to-string (+ (- key ?\C-\M-a) ?a))))
+                    (t
+                     (char-to-string key)))
+            (symbol-name key))))
+
+(exwm-evil--get-key-symbol ?\M-z)
+
 (defun exwm-evil-send-key (count key)
   "Sends KEY to the application COUNT times."
   (when (and (integerp count) (> count 50))
@@ -89,10 +108,8 @@ press will register.")
 
 (defmacro exwm-evil-command (key)
   "Defines an EXWM Evil command for KEY."
-  `(evil-define-motion ,(intern (concat "exwm-evil-core-"
-                                        (if (ignore-errors (integerp key))
-                                            (char-to-string key)
-                                          (symbol-name key))))
+  `(evil-define-motion
+     ,(intern (exwm-evil--get-key-symbol key))
      (count)
      (exwm-evil-send-key
       count
@@ -165,6 +182,7 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<backtab>") (exwm-evil-command S-tab))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "v") #'exwm-evil-visual-char)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "V") #'exwm-evil-visual-line)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-a") (exwm-evil-command ?\C-a))
 ;; Now bind all modified versions of these keys
 (evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
