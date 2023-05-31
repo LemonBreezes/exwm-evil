@@ -170,8 +170,6 @@ enabled, Evil's normal state will automatically be entered."
   (interactive)
   (exwm-evil-mode +1))
 
-(evil-state-property (caar (evil-state-property t :modes)) :modes)
-
 (define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-normal-state)
 (define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-normal-state)
 
