@@ -1,0 +1,50 @@
+#+TITLE:   Evil EXWM
+#+DATE:    January 3, 2022
+#+SINCE:   1.0
+#+STARTUP: inlineimages nofold
+
+* Table of Contents :TOC_3:noexport:
+- [[#description][Description]]
+- [[#install][Install]]
+  - [[#for-doom-emacs-users][For Doom Emacs users]]
+- [[#similar-packages][Similar packages]]
+- [[#known-bugs][Known bugs]]
+
+* Description
+This package implements Evil state compatibility for EXWM applications.
+
+* Install
+
+** For Doom Emacs users
+Add the following snippet to your ~packages.el~ file:
+#+begin_src elisp
+(package! exwm-evil :recipe
+  (:host github :repo "LemonBreezes/exwm-evil"))
+#+end_src
+
+Then, use the following ~use-package~ block:
+#+begin_src elisp
+(use-package! exwm-evil
+  :when (featurep! :editor evil)
+  :after exwm
+  :config
+  (add-hook 'exwm-manage-finish-hook 'exwm-evil-mode)
+  (cl-pushnew 'escape exwm-input-prefix-keys)
+  (cl-pushnew ?\C-c exwm-input-prefix-keys)
+  (map! :map exwm-evil-mode-map
+        :prefix "C-c"
+        :desc "Send Escape" "C-i" (cmd! (exwm-input--fake-key "<escape>"))
+        :desc "Send Control-C" "C-c" (cmd! (exwm-input--fake-key ?\C-c))))
+#+end_src
+
+Keep in mind that when using the above configuration, the ~escape~ key no longer
+gets passed to the target application. To send escape, you must type
+~C-c C-i~. Similarly, to send ~C-c~, you must type ~C-c C-c~.
+
+* Similar packages
+This package was heavily inspired by [[https://github.com/walseb/exwm-firefox-evil][EXWM Firefox Evil]] but is much more
+barebones as it does not provide any motion nor selection commands for
+applications.
+
+* Known bugs
+The mouse currently only works for EXWM applications during insert state.
