@@ -69,4 +69,4 @@ to your personal configuration.
 :CREATED_TIME: [2022-01-04 Tue 12:33]
 :END:
 
-- [ ] Implement some basic motion commands like ~exwm-evil-core-up~
+- Implement some basic motion commands like ~exwm-evil-core-up~
