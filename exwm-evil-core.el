@@ -48,8 +48,24 @@
   "Move to the bottom."
   (exwm-input--fake-key 'end))
 
+(evil-define-motion exwm-evil-core-zoom-in (count)
+  "Zoom in COUNT times."
+  (cl-dotimes (_ (or count 1))
+    (exwm-input--fake-key ?\C-=)))
+
+(evil-define-motion exwm-evil-core-zoom-out (count)
+  "Zoom out COUNT times."
+  (cl-dotimes (_ (or count 1))
+    (exwm-input--fake-key ?\C--)))
+
+(evil-define-motion exwm-evil-core-reset-zoom ()
+  "Reset the level of zoom in the current application."
+  (exwm-input--fake-key ?\C-0))
+
 (evil-define-motion exwm-evil-core-send-this-key (count)
   "Send this key to the application COUNT times."
   (cl-dotimes (_ (or count 1))
     (cl-loop for key in (listify-key-sequence (this-command-keys))
              do (exwm-input--fake-key key))))
+
+(provide 'exwm-evil-core)
