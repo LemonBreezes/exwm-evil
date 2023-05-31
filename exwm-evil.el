@@ -1,6 +1,6 @@
 ;;; packages/exwm-evil/exwm-evil.el -*- lexical-binding: t; -*-
 
-;; Author: ***REMOVED*** <***REMOVED***>
+;; Author: LemonBreezes
 ;; URL: https://github.com/LemonBreezes/exwm-evil
 ;; Version: 1.0
 ;; Package-Requires: ((emacs "24.4") (exwm "0.16") (evil "1.0.0"))
