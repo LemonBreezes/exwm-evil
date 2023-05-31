@@ -24,6 +24,14 @@
   (cl-dotimes (_ (or count 1))
     (exwm-input--fake-key 'right)))
 
+(evil-define-motion exwm-evil-core-top ()
+  "Move to the top."
+  (exwm-input--fake-key 'home))
+
+(evil-define-motion exwm-evil-core-bottom ()
+  "Move to the bottom."
+  (exwm-input--fake-key 'end))
+
 (evil-define-motion exwm-evil-core-send-this-key (count)
   "Send this key to the application COUNT times."
   (cl-dotimes (_ (or count 1))

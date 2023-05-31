@@ -94,9 +94,19 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "k") #' exwm-evil-core-up)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "h") #' exwm-evil-core-left)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "l") #' exwm-evil-core-right)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #' exwm-evil-core-top)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "G") #' exwm-evil-core-bottom)
+
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<next>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<prior>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<return>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<home>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<end>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<left>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<right>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<down>") #'exwm-evil-core-send-this-key)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<up>") #'exwm-evil-core-send-this-key)
+
 
 (provide 'exwm-evil)
 
