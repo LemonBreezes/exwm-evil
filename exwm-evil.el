@@ -60,14 +60,16 @@ press will register.")
   (evil-insert-state))
 
 (defun exwm-evil-visual-char ()
+  "Emulate `evil-visual-state' using keybindings."
   (interactive)
   (setq-local exwm-evil-visual-state-enabled
               (not exwm-evil-visual-state-enabled)))
 
 (defun exwm-evil-visual-line ()
+  "Emulate `evil-visual-line' using keybindings."
   (interactive)
   (when (not exwm-evil-visual-state-enabled)
-      (exwm-input--fake-key 'home)
+    (exwm-input--fake-key 'home)
     (exwm-input--fake-key 'S-end))
   (setq-local exwm-evil-visual-state-enabled
               (not exwm-evil-visual-state-enabled)))
