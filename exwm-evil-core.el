@@ -80,5 +80,9 @@
   "Moves backward COUNT words."
   (exwm-evil-send-key count 'C-left))
 
+(evil-define-motion exwm-evil-core-quit ()
+  "Close the current application."
+  (exwm-input--fake-key 'M-f4))
+
 
 (provide 'exwm-evil-core)
