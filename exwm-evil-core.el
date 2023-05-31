@@ -20,6 +20,10 @@
 (require 'exwm)
 (require 'exwm-input)
 
+(defvar exwm-evil-input-delay 0.06
+  "The delay between bundled keypresses. If you set it too low, not every key
+press will register.")
+
 (evil-define-motion exwm-evil-core-up (count)
   "Move up COUNT times."
   (exwm-evil-send-key count 'up))
@@ -130,8 +134,10 @@
   (exwm-input--fake-key 'delete)
   (exwm-evil-core-insert))
 
-(defun exwm-evil-core-select-all ()
-  "Select everything."
-  (exwm-input--fake-key ?\C-a))
+(defun exwm-evil-core-copy-all ()
+  "Copy everything."
+  (interactive)
+  (exwm-input--fake-key ?\C-a)
+  (run-at-time exwm-evil-input-delay nil #'exwm-input--fake-key ?\C-c))
 
 (provide 'exwm-evil-core)

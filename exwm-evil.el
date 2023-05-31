@@ -32,9 +32,6 @@
 
 (defvar exwm-evil-mode-map (make-sparse-keymap)
   "Keymap for `exwm-evil-mode'.")
-(defvar exwm-evil-input-delay 0.06
-  "The delay between bundled keypresses. If you set it too low, not every key
-press will register.")
 (defvar exwm-evil-visual-state-enabled nil
   "This variable determines whether we are currently entering keys with shift held.")
 
@@ -215,6 +212,7 @@ enabled, Evil's normal state will automatically be entered."
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "p") (exwm-evil-command C-v))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "y") (exwm-evil-command C-c))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "Y") #'exwm-evil-core-copy-all)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "x") (exwm-evil-command backspace))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "+") (exwm-evil-command C-+))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "-") (exwm-evil-command C--))
