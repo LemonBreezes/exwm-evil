@@ -74,9 +74,6 @@ press will register.")
   (setq-local exwm-evil-visual-state-enabled
               (not exwm-evil-visual-state-enabled)))
 
-;; (= (- ?z ?a) (- ?\C-z ?\C-a)) => t
-;; (= (- ?z ?a) (- ?\M-z ?\M-a)) => t
-;; (= (- ?z ?a) (- ?\C-\M-z ?\C-\M-a)) => t
 (defun exwm-evil--get-key-symbol (key)
   (concat "exwm-evil-core-"
           (if (ignore-errors (integerp key))
@@ -91,7 +88,7 @@ press will register.")
                      (char-to-string key)))
             (symbol-name key))))
 
-(exwm-evil--get-key-symbol ?\M-z)
+;; (exwm-evil--get-key-symbol ?\M-z) => "exwm-evil-core-M-z"
 
 (defun exwm-evil-send-key (count key)
   "Sends KEY to the application COUNT times."
@@ -107,8 +104,9 @@ press will register.")
                  (lambda (key)
                    (exwm-input--fake-key key))
                  key)))
+
 ;; (setq exwm-evil-visual-state-enabled nil)
-;; (aref (kbd (concat "S-" (char-to-string ?\C-t))) 0)
+;; (aref (kbd (concat "S-" (char-to-string ?\C-t))) 0) => 33554452
 
 (defmacro exwm-evil-command (key)
   "Defines an EXWM Evil command for KEY."
