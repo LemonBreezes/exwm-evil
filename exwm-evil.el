@@ -157,14 +157,7 @@ enabled, Evil's normal state will automatically be entered."
       (exwm-evil-normal-state)
     (kill-local-variable exwm-input-line-mode-passthrough)
     (kill-local-variable exwm-input-prefix-keys)
-    (kill-local-variable exwm-evil-visual-state-enabled)
-    ;; Change state to whatever our initial state for EXWM buffers is.
-     (let ((state (cl-find-if
-                  (lambda (state)
-                    (memq 'exwm-mode
-                          (symbol-value (evil-state-property state :modes))))
-                  (mapcar #'car (evil-state-property t :modes)))))
-      (when state (evil-change-state state)))))
+    (kill-local-variable exwm-evil-visual-state-enabled)))
 
 (defun enable-exwm-evil-mode (&rest _)
   "Turns on Evil mode for the current EXWM buffer."
