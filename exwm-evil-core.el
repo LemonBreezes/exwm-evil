@@ -1,6 +1,6 @@
 ;;; packages/exwm-evil/exwm-evil-core.el -*- lexical-binding: t; -*-
 
-;; Author: ***REMOVED*** <***REMOVED***>
+;; Author: LemonBreezes
 ;; URL: https://github.com/LemonBreezes/exwm-evil
 
 ;; This program is free software; you can redistribute it and/or modify
