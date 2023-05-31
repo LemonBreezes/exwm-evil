@@ -84,5 +84,26 @@
   "Close the current application."
   (exwm-input--fake-key 'M-f4))
 
+(defun exwm-evil-core-normal ()
+  "Pass every key directly to Emacs."
+  (interactive)
+  (setq-local exwm-input-line-mode-passthrough t)
+  (evil-normal-state))
+
+(defun exwm-evil-core-insert ()
+  "Pass every key directly to the application."
+  (interactive)
+  (setq-local exwm-input-line-mode-passthrough nil)
+  (evil-insert-state))
+
+(evil-define-motion exwm-evil-core-append ()
+  "Move forward once and enter insert state."
+  (exwm-input--fake-key 'right)
+  (exwm-evil-core-insert))
+
+(evil-define-motion exwm-evil-core-append-line ()
+  "Move forward to the end of the line and enter insert state."
+  (exwm-input--fake-key 'end)
+  (exwm-evil-core-insert))
 
 (provide 'exwm-evil-core)

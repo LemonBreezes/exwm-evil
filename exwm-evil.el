@@ -36,18 +36,6 @@
   "The delay between bundled keypresses. If you set it too low, not every key
 press will register.")
 
-(defun exwm-evil-normal ()
-  "Pass every key directly to Emacs."
-  (interactive)
-  (setq-local exwm-input-line-mode-passthrough t)
-  (evil-normal-state))
-
-(defun exwm-evil-insert ()
-  "Pass every key directly to the application."
-  (interactive)
-  (setq-local exwm-input-line-mode-passthrough nil)
-  (evil-insert-state))
-
 (defun exwm-evil-send-key (count key)
   "Sends KEY to the application COUNT times."
   (when (and (integerp count) (> count 50))
@@ -100,13 +88,13 @@ The EXWM Evil mode should only be enabled in EXWM buffers. When
 enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
   (when exwm-evil-mode
-    (exwm-evil-normal)))
+    (exwm-evil-core-normal)))
 
-(define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-normal)
-(define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-normal)
+(define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-core-normal)
+(define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-core-normal)
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "i") #'exwm-evil-insert)
-(evil-define-key 'insert exwm-evil-mode-map (kbd "<escape>") #'exwm-evil-normal)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "i") #'exwm-evil-core-insert)
+(evil-define-key 'insert exwm-evil-mode-map (kbd "<escape>") #'exwm-evil-core-normal)
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "j") #'exwm-evil-core-down)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "k") #'exwm-evil-core-up)
@@ -116,6 +104,8 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "b") #'exwm-evil-core-backward-word)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #'exwm-evil-core-top)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "G") #'exwm-evil-core-bottom)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "a") #'exwm-evil-core-append)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "A") #'exwm-evil-core-append-line)
 ;; Now bind all modified versions of these keys
 (evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
