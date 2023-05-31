@@ -22,31 +22,19 @@
 
 (evil-define-motion exwm-evil-core-up (count)
   "Move up COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time (* i exwm-evil-input-delay) nil
-                 (lambda (&rest _)
-                   (exwm-input--fake-key 'up)))))
+  (exwm-evil-send-key count 'up))
 
 (evil-define-motion exwm-evil-core-down (count)
   "Move up COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time (* i exwm-evil-input-delay) nil
-                 (lambda (&rest _)
-                   (exwm-input--fake-key 'down)))))
+  (exwm-evil-send-key count 'down))
 
 (evil-define-motion exwm-evil-core-left (count)
   "Move left COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time (* i exwm-evil-input-delay) nil
-                 (lambda (&rest _)
-                   (exwm-input--fake-key 'left)))))
+  (exwm-evil-send-key count 'left))
 
 (evil-define-motion exwm-evil-core-right (count)
   "Move right COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time (* i exwm-evil-input-delay) nil
-                 (lambda (&rest _)
-                   (exwm-input--fake-key 'right)))))
+  (exwm-evil-send-key count 'right))
 
 (evil-define-motion exwm-evil-core-top ()
   "Move to the top."
@@ -58,17 +46,11 @@
 
 (evil-define-motion exwm-evil-core-zoom-in (count)
   "Zoom in COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time (* i exwm-evil-input-delay) nil
-                 (lambda (&rest _)
-                   (exwm-input--fake-key ?\C-=)))))
+  (exwm-evil-send-key count ?\C-=))
 
 (evil-define-motion exwm-evil-core-zoom-out (count)
   "Zoom out COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time (* i exwm-evil-input-delay) nil
-                 (lambda (&rest _)
-                   (exwm-input--fake-key ?\C--)))))
+  (exwm-evil-send-key count ?\C--))
 
 (evil-define-motion exwm-evil-core-reset-zoom ()
   "Reset the level of zoom in the current application."
@@ -76,11 +58,6 @@
 
 (evil-define-motion exwm-evil-core-send-this-key (count)
   "Send this key to the application COUNT times."
-  (cl-dotimes (i (or count 1))
-    (run-at-time
-     (* i exwm-evil-input-delay) nil
-     `(lambda (&rest _)
-       (cl-loop for key in (listify-key-sequence ,(this-command-keys))
-                do (exwm-input--fake-key key))))))
+  (exwm-evil-send-key count (aref (this-command-keys-vector) 0)))
 
 (provide 'exwm-evil-core)

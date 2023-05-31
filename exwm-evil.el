@@ -46,12 +46,15 @@
   (setq-local exwm-input-line-mode-passthrough nil)
   (evil-insert-state))
 
+(defun exwm-evil-send-key (count key)
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 `(lambda (&rest _)
+                   (exwm-input--fake-key ',key)))))
+
 (defmacro exwm-evil-command (key)
   `(evil-define-motion ,(intern (concat "exwm-evil-core-" (symbol-name key))) (count)
-    (cl-dotimes (i (or count 1))
-      (run-at-time (* i exwm-evil-input-delay) nil
-                   (lambda (&rest _)
-                     (exwm-input--fake-key ',key))))))
+     (exwm-evil-send-key count ,key)))
 
 ;; HACK See https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501
 (defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
@@ -120,9 +123,9 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-j") (exwm-evil-command S-C-M-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-k") (exwm-evil-command S-C-M-up))
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "+") #' exwm-evil-core-zoom-in)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "-") #' exwm-evil-core-zoom-out)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "=") #' exwm-evil-core-reset-zoom)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "+") #'exwm-evil-core-zoom-in)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "-") #'exwm-evil-core-zoom-out)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "=") #'exwm-evil-core-reset-zoom)
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<next>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<prior>") #'exwm-evil-core-send-this-key)
