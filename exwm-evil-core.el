@@ -22,23 +22,31 @@
 
 (evil-define-motion exwm-evil-core-up (count)
   "Move up COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (exwm-input--fake-key 'up)))
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 (lambda (&rest _)
+                   (exwm-input--fake-key 'up)))))
 
 (evil-define-motion exwm-evil-core-down (count)
   "Move up COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (exwm-input--fake-key 'down)))
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 (lambda (&rest _)
+                   (exwm-input--fake-key 'down)))))
 
 (evil-define-motion exwm-evil-core-left (count)
   "Move left COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (exwm-input--fake-key 'left)))
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 (lambda (&rest _)
+                   (exwm-input--fake-key 'left)))))
 
 (evil-define-motion exwm-evil-core-right (count)
   "Move right COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (exwm-input--fake-key 'right)))
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 (lambda (&rest _)
+                   (exwm-input--fake-key 'right)))))
 
 (evil-define-motion exwm-evil-core-top ()
   "Move to the top."
@@ -50,13 +58,17 @@
 
 (evil-define-motion exwm-evil-core-zoom-in (count)
   "Zoom in COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (exwm-input--fake-key ?\C-=)))
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 (lambda (&rest _)
+                   (exwm-input--fake-key ?\C-=)))))
 
 (evil-define-motion exwm-evil-core-zoom-out (count)
   "Zoom out COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (exwm-input--fake-key ?\C--)))
+  (cl-dotimes (i (or count 1))
+    (run-at-time (* i exwm-evil-input-delay) nil
+                 (lambda (&rest _)
+                   (exwm-input--fake-key ?\C--)))))
 
 (evil-define-motion exwm-evil-core-reset-zoom ()
   "Reset the level of zoom in the current application."
@@ -64,8 +76,11 @@
 
 (evil-define-motion exwm-evil-core-send-this-key (count)
   "Send this key to the application COUNT times."
-  (cl-dotimes (_ (or count 1))
-    (cl-loop for key in (listify-key-sequence (this-command-keys))
-             do (exwm-input--fake-key key))))
+  (cl-dotimes (i (or count 1))
+    (run-at-time
+     (* i exwm-evil-input-delay) nil
+     `(lambda (&rest _)
+       (cl-loop for key in (listify-key-sequence ,(this-command-keys))
+                do (exwm-input--fake-key key))))))
 
 (provide 'exwm-evil-core)
