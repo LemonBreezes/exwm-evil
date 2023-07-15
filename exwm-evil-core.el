@@ -134,6 +134,13 @@ press will register.")
   (exwm-input--fake-key 'delete)
   (exwm-evil-core-insert))
 
+(evil-define-motion exwm-evil-core-change-line ()
+  "Delete the current line and switch to insert state."
+  (exwm-input--fake-key 'home)
+  (exwm-input--fake-key 'S-end)
+  (exwm-input--fake-key 'delete)
+  (exwm-evil-core-insert))
+
 (defun exwm-evil-core-insert-line ()
   "Move to the beginning of the current line and switch to insert
 state."
