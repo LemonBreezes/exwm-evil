@@ -9,7 +9,6 @@
 - [[#install][Install]]
   - [[#for-users-of-doom-emacs][For users of Doom Emacs]]
 - [[#similar-packages][Similar packages]]
-- [[#hacks--bugs][Hacks / Bugs]]
 - [[#future-direction][Future direction]]
 
 * Description
@@ -51,23 +50,7 @@ This package was heavily inspired by [[https://github.com/walseb/exwm-firefox-ev
 barebones as it currently does not provide any motion nor selection commands for
 applications.
 
-* Hacks / Bugs
-
-In order to use the mouse in EXWM applications during normal state, we have
-implemented the workaround in
-https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501.
-
-If you would like to enable this workaround, add:
-#+begin_src elisp
-(exwm-evil-enable-mouse-workaround)
-#+end_src
-
-to your personal configuration.
-
 * Future direction
-:PROPERTIES:
-:CREATED_TIME: [2022-01-04 Tue 12:33]
-:END:
 
 - +Implement some basic motion commands like ~exwm-evil-core-up~+
 - Implement visual state commands

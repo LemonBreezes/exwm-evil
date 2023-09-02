@@ -114,35 +114,6 @@
       count
       (if (ignore-errors (integerp ,key)) ,key ',key))))
 
-;; HACK See https://github.com/walseb/exwm-firefox-evil/issues/1#issuecomment-672390501
-(defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
-  "Handle button events in line mode.
-BUFFER is the `exwm-mode' buffer the event was generated
-on. BUTTON-EVENT is the X event converted into an Emacs event.
-
-The return value is used as event_mode to release the original
-button event."
-  (with-current-buffer buffer
-    (let ((read-event (exwm-input--mimic-read-event button-event)))
-      (exwm--log "%s" read-event)
-      (if (and read-event
-               (exwm-input--event-passthrough-p read-event))
-          ;; The event should be forwarded to emacs
-          (progn
-            (exwm-input--cache-event read-event)
-            (exwm-input--unread-event button-event)
-
-            xcb:Allow:ReplayPointer)
-        ;; The event should be replayed
-        xcb:Allow:ReplayPointer))))
-
-(defun exwm-evil-enable-mouse-workaround ()
-  "Enables a workaround which allows for mouse events to be sent to an
-application during the normal state."
-  (advice-add #'exwm-input--on-ButtonPress-line-mode
-              :override
-              #'exwm-evil--on-ButtonPress-line-mode))
-
 ;;;###autoload
 (define-minor-mode exwm-evil-mode
   "Toggle the EXWM Evil mode.
