@@ -28,21 +28,33 @@ Add the following snippet to your ~packages.el~ file:
 Then, use the following ~use-package~ block:
 #+begin_src elisp
 (use-package! exwm-evil
-  :when (featurep! :editor evil)
   :after exwm
   :config
-  (add-hook 'exwm-manage-finish-hook 'exwm-evil-mode)
+  (add-hook 'exwm-mode-hook #'enable-exwm-evil-mode)
+  (add-hook 'exwm-manage-finish-hook #'enable-exwm-evil-mode)
+  (add-hook 'doom-switch-buffer-hook #'enable-exwm-evil-mode)
   (cl-pushnew 'escape exwm-input-prefix-keys)
-  (cl-pushnew ?\C-c exwm-input-prefix-keys)
-  (map! :map exwm-evil-mode-map
-        :prefix "C-c"
-        :desc "Send Escape" "C-i" (cmd! (exwm-input--fake-key "<escape>"))
-        :desc "Send Control-C" "C-c" (cmd! (exwm-input--fake-key ?\C-c))))
+
+  ;; We will disable `C-c' in insert state.
+  (define-key exwm-mode-map (kbd "C-c") nil)
+
+  (map! :map exwm-mode-map
+        :localleader
+        (:prefix ("d" . "debug")
+         :desc "Clear debug buffer" "l" #'xcb-debug:clear
+         :desc "Insert mark into the debug buffer" "m" #'xcb-debug:mark
+         :desc "Enable debug logging" "t" #'exwm-debug)
+        :desc "Toggle fullscreen" "f" #'exwm-layout-toggle-fullscreen
+        :desc "Hide floating window" "h" #'exwm-floating-hide
+        :desc "Send next key" "q" #'exwm-input-send-next-key
+        :desc "Toggle floating" "SPC" #'exwm-floating-toggle-floating
+        :desc "Send escape" "e" (cmd! (exwm-evil-send-key 1 'escape))
+        :desc "Toggle modeline" "m" #'exwm-layout-toggle-mode-line))
 #+end_src
 
 Keep in mind that when using the above configuration, the ~escape~ key no longer
 gets passed to the target application. To send escape, you must type
-~C-c C-i~. Similarly, to send ~C-c~, you must type ~C-c C-c~.
+~SPC m e~ in normal state.
 
 * Similar packages
 
