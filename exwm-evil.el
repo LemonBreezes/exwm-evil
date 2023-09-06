@@ -202,6 +202,11 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<down>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<up>") #'exwm-evil-core-send-this-key)
 
+(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-1>") (cmd! () (exwm-evil-core-do-mouse-click 1)))
+(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-2>") (cmd! () (exwm-evil-core-do-mouse-click 2)))
+(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-3>") (cmd! () (exwm-evil-core-do-mouse-click 3)))
+
+
 (provide 'exwm-evil)
 
 ;;; exwm-evil.el ends here
