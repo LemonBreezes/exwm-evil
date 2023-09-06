@@ -65,4 +65,4 @@ applications.
 * Future direction
 
 - +Implement some basic motion commands like ~exwm-evil-core-up~+
-- Implement visual state commands
+- +Implement visual state commands+
