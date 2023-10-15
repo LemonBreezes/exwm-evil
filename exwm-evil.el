@@ -35,6 +35,17 @@
 (defvar exwm-evil-visual-state-enabled nil
   "This variable determines whether we are currently entering keys with shift held.")
 
+(defcustom exwm-evil-initial-state-alist nil
+  "A mapping of EXWM class names to Evil initial state. Only
+`normal' and `insert' are currently supported."
+  :type '(alist :key-type string :value-type symbol)
+  :group 'exwm-evil)
+
+(defcustom exwm-evil-default-initial-state 'normal
+  "The default initial state for EXWM buffers."
+  :type 'symbol
+  :group 'exwm-evil)
+
 (evil-define-motion exwm-evil-core-send-this-key (count)
   "Send this key to the application COUNT times."
   (exwm-evil-send-key count (aref (this-command-keys-vector) 0)))
@@ -122,7 +133,11 @@ The EXWM Evil mode should only be enabled in EXWM buffers. When
 enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
   (if exwm-evil-mode
-      (exwm-evil-normal-state)
+      (pcase (or (alist-get exwm-class-name exwm-evil-initial-state-alist
+                            nil nil #'string=)
+                 exwm-evil-default-initial-state)
+        ('normal (exwm-evil-normal-state))
+        ('insert (exwm-evil-insert)))
     (kill-local-variable 'exwm-input-line-mode-passthrough)
     (kill-local-variable 'exwm-input-prefix-keys)
     (kill-local-variable 'exwm-evil-visual-state-enabled)))
