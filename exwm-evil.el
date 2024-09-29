@@ -181,6 +181,7 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "V") #'exwm-evil-visual-line)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "C-a") (exwm-evil-command ?\C-a))
 ;; Now bind all modified versions of these keys
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-p") (exwm-evil-command C-p))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "o") (exwm-evil-command C-o))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
@@ -222,6 +223,7 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-2>") (cmd! () (exwm-evil-core-do-mouse-click 2)))
 (evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-3>") (cmd! () (exwm-evil-core-do-mouse-click 3)))
 
+(evil-define-key 'insert exwm-evil-mode-map (kbd "C-o") #'exwm-evil-core-send-this-key)
 
 (provide 'exwm-evil)
 
