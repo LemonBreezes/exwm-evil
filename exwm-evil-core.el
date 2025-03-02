@@ -188,6 +188,7 @@ By default BUTTON-NUM is ``1'' (i.e. main click) and the WINDOW-ID is the curren
                                  exwm--connection))))
     (xcb:flush exwm--connection)))
 
+;; Obsolete. Here In case someone still uses it.
 (defun exwm-evil-core-do-mouse-click (button-num)
   "Perform a left mouse click at the current cursor position."
   (interactive)
@@ -201,3 +202,24 @@ By default BUTTON-NUM is ``1'' (i.e. main click) and the WINDOW-ID is the curren
           (exwm-evil-insert)
           (exwm-evil-core-do-mouse-click-x-y mouse-x mouse-y button-num))
       (call-interactively #'evil-mouse-drag-region))))
+
+(defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
+  "Handle button events in line mode.
+BUFFER is the `exwm-mode' buffer the event was generated
+on. BUTTON-EVENT is the X event converted into an Emacs event.
+
+The return value is used as event_mode to release the original
+button event."
+  (with-current-buffer buffer
+    (let ((read-event (exwm-input--mimic-read-event button-event)))
+      (exwm--log "%s" read-event)
+      (if (and read-event
+               (exwm-input--event-passthrough-p read-event))
+          ;; The event should be forwarded to emacs
+          (progn
+            (exwm-input--cache-event read-event)
+            (exwm-input--unread-event button-event)
+
+            xcb:Allow:ReplayPointer)
+        ;; The event should be replayed
+        xcb:Allow:ReplayPointer))))

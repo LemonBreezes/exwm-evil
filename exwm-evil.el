@@ -133,14 +133,19 @@ The EXWM Evil mode should only be enabled in EXWM buffers. When
 enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
   (if exwm-evil-mode
-      (pcase (or (alist-get exwm-class-name exwm-evil-initial-state-alist
-                            nil nil #'string=)
-                 exwm-evil-default-initial-state)
-        ('normal (exwm-evil-normal-state))
-        ('insert (exwm-evil-insert)))
+      (progn (pcase (or (alist-get exwm-class-name exwm-evil-initial-state-alist
+                                   nil nil #'string=)
+                        exwm-evil-default-initial-state)
+               ('normal (exwm-evil-normal-state))
+               ('insert (exwm-evil-insert)))
+             (advice-add #'exwm-input--on-ButtonPress-line-mode
+                         :override
+                         #'exwm-evil--on-ButtonPress-line-mode))
     (kill-local-variable 'exwm-input-line-mode-passthrough)
     (kill-local-variable 'exwm-input-prefix-keys)
-    (kill-local-variable 'exwm-evil-visual-state-enabled)))
+    (kill-local-variable 'exwm-evil-visual-state-enabled)
+    (advice-remove #'exwm-input--on-ButtonPress-line-mode
+                   #'exwm-evil--on-ButtonPress-line-mode)))
 
 (defun enable-exwm-evil-mode (&rest _)
   "Turns on Evil mode for the current EXWM buffer."
@@ -219,9 +224,9 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<down>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<up>") #'exwm-evil-core-send-this-key)
 
-(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-1>") (cmd! () (exwm-evil-core-do-mouse-click 1)))
-(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-2>") (cmd! () (exwm-evil-core-do-mouse-click 2)))
-(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-3>") (cmd! () (exwm-evil-core-do-mouse-click 3)))
+(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-1>") #'ignore)
+(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-2>") #'ignore)
+(evil-define-key 'motion exwm-evil-mode-map (kbd "<down-mouse-3>") #'ignore)
 
 (evil-define-key 'insert exwm-evil-mode-map (kbd "C-o") #'exwm-evil-core-send-this-key)
 
