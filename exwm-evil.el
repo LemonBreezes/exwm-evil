@@ -1,9 +1,9 @@
-;;; packages/exwm-evil/exwm-evil.el -*- lexical-binding: t; -*-
+;;; exwm-evil.el --- Evil states for EXWM applications -*- lexical-binding: t; -*-
 
 ;; Author: LemonBreezes
 ;; URL: https://github.com/LemonBreezes/exwm-evil
 ;; Version: 1.0
-;; Package-Requires: ((emacs "25.1") (exwm "0.16") (evil "1.0.0"))
+;; Package-Requires: ((emacs "25.1") (cl-lib "0.5"))
 ;; Keywords: extensions
 
 ;; exwm-evil.el is free software; you can redistribute it and/or modify it
@@ -22,6 +22,7 @@
 ;;; Commentary:
 
 ;; This package implements Evil states for EXWM applications.
+;; It allows you to use Evil keybindings with X applications.
 
 ;;; Code:
 (require 'evil)
@@ -32,6 +33,9 @@
 
 (defvar exwm-evil-mode-map (make-sparse-keymap)
   "Keymap for `exwm-evil-mode'.")
+
+(defvar exwm-evil-input-delay 0.01
+  "Delay between sending keys to the application.")
 (defvar exwm-evil-visual-state-enabled nil
   "This variable determines whether we are currently entering keys with shift held.")
 
@@ -83,6 +87,8 @@
               (not exwm-evil-visual-state-enabled)))
 
 (defun exwm-evil--get-key-symbol (key)
+  "Convert KEY to a symbol name for use in function names.
+For example, converts the character C-a to the string \"exwm-evil-core-C-a\"."
   (concat "exwm-evil-core-"
           (if (ignore-errors (integerp key))
               (cond ((<= ?\C-a key ?\C-z)
@@ -147,7 +153,7 @@ enabled, Evil's normal state will automatically be entered."
     (advice-remove #'exwm-input--on-ButtonPress-line-mode
                    #'exwm-evil--on-ButtonPress-line-mode)))
 
-(defun enable-exwm-evil-mode (&rest _)
+(defun exwm-evil-enable (&rest _)
   "Turns on Evil mode for the current EXWM buffer."
   (interactive)
   (when (derived-mode-p 'exwm-mode)
@@ -205,13 +211,13 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<C-deletechar>") (exwm-evil-command C-delete))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<C-backspace>") (exwm-evil-command C-backspace))
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "p") (exwm-evil-command C-v))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "y") (exwm-evil-command C-c))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "p") (exwm-evil-command ?\C-v))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "y") (exwm-evil-command ?\C-c))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "Y") #'exwm-evil-core-copy-all)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "x") (exwm-evil-command backspace))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "+") (exwm-evil-command C-+))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "-") (exwm-evil-command C--))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "=") (exwm-evil-command C-=))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "+") (exwm-evil-command ?\C-+))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "-") (exwm-evil-command ?\C--))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "=") (exwm-evil-command ?\C-=))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "M-<f4>") (exwm-evil-command M-f4))
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<next>") #'exwm-evil-core-send-this-key)
