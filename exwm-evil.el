@@ -129,16 +129,33 @@ Works with both symbol keys and character keys."
 ;; (setq exwm-evil-visual-state-enabled nil)
 ;; (aref (kbd (concat "S-" (char-to-string ?\C-t))) 0) => 33554452
 
-(defmacro exwm-evil-command (key)
-  "Define an EXWM Evil command for KEY.
+(defun exwm-evil-define-motion-command (key)
+  "Define an EXWM Evil motion command for KEY.
 Creates a motion command that sends KEY to the application."
-  `(evil-define-motion
-     ,(intern (exwm-evil--get-key-symbol key))
-     (count)
-     ,(format "Send %s key to the application COUNT times." key)
-     (exwm-evil-send-key
-      count
-      (if (ignore-errors (integerp ,key)) ,key ',key))))
+  (let* ((key-name (exwm-evil--get-key-symbol key))
+         (key-symbol (intern key-name))
+         (key-doc (format "Send %s key to the application COUNT times." key))
+         (key-val (if (ignore-errors (integerp key)) key key)))
+
+    ;; Define the motion command function
+    (defalias key-symbol
+      (lambda (count)
+        (interactive "p")
+        (exwm-evil-send-key count key-val)))
+
+    ;; Add evil motion property
+    (put key-symbol 'function-documentation key-doc)
+    (evil-set-command-property key-symbol :type 'motion)
+    (evil-set-command-property key-symbol :repeat 'motion)
+
+    ;; Return the symbol for binding
+    key-symbol))
+
+(defun exwm-evil-command (key)
+  "Define an EXWM Evil command for KEY.
+Creates a motion command that sends KEY to the application.
+Returns the symbol of the created command."
+  (exwm-evil-define-motion-command key))
 
 ;;;###autoload
 (define-minor-mode exwm-evil-mode
@@ -184,58 +201,72 @@ enabled, Evil's normal state will automatically be entered."
 ;; Should we send escape to application with ESC ESC?
 ;; (evil-define-key 'normal exwm-evil-mode-map (kbd "<escape>") (exwm-evil-command escape))
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "j") (exwm-evil-command down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "k") (exwm-evil-command up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "h") (exwm-evil-command left))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "l") (exwm-evil-command right))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "e") (exwm-evil-command C-right))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "b") (exwm-evil-command C-left))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "gg") (exwm-evil-command C-home))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "G") (exwm-evil-command C-end))
+;; Define all the motion commands
+(dolist (key '(down up left right
+               C-right C-left C-home C-end
+               home end C-u C-x delete
+               tab S-tab C-a C-p C-o
+               S-down S-up C-down M-down
+               C-up M-up C-M-down C-M-up
+               S-C-down S-M-down S-C-up S-M-up
+               S-C-M-down S-C-M-up C-delete
+               C-backspace C-v C-c backspace
+               C-+ C-- C-= M-f4))
+  (exwm-evil-command key))
+
+;; Bind the keys to the motion commands
+(evil-define-key 'normal exwm-evil-mode-map (kbd "j") #'exwm-evil-core-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "k") #'exwm-evil-core-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "h") #'exwm-evil-core-left)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "l") #'exwm-evil-core-right)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "e") #'exwm-evil-core-C-right)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "b") #'exwm-evil-core-C-left)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "gg") #'exwm-evil-core-C-home)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "G") #'exwm-evil-core-C-end)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "a") #'exwm-evil-core-append)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "A") #'exwm-evil-core-append-line)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "c") #'exwm-evil-core-change)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "C") #'exwm-evil-core-change-line)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "I") #'exwm-evil-core-insert-line)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "0") (exwm-evil-command home))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "$") (exwm-evil-command end))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "u") (exwm-evil-command C-u))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "d") (exwm-evil-command C-x))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "D") (exwm-evil-command C-x))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "<deletechar>") (exwm-evil-command delete))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "<tab>") (exwm-evil-command tab))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "<backtab>") (exwm-evil-command S-tab))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "0") #'exwm-evil-core-home)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "$") #'exwm-evil-core-end)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "u") #'exwm-evil-core-C-u)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "d") #'exwm-evil-core-C-x)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "D") #'exwm-evil-core-C-x)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<deletechar>") #'exwm-evil-core-delete)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<tab>") #'exwm-evil-core-tab)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<backtab>") #'exwm-evil-core-S-tab)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "v") #'exwm-evil-visual-char)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "V") #'exwm-evil-visual-line)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-a") (exwm-evil-command C-a))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-a") #'exwm-evil-core-C-a)
 ;; Now bind all modified versions of these keys
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-p") (exwm-evil-command C-p))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "o") (exwm-evil-command C-o))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "J") (exwm-evil-command S-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "K") (exwm-evil-command S-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-j") (exwm-evil-command C-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "M-j") (exwm-evil-command M-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-k") (exwm-evil-command C-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "M-k") (exwm-evil-command M-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-M-j") (exwm-evil-command C-M-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-M-k") (exwm-evil-command C-M-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-j") (exwm-evil-command S-C-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "S-M-j") (exwm-evil-command S-M-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-k") (exwm-evil-command S-C-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "S-M-k") (exwm-evil-command S-M-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-j") (exwm-evil-command S-C-M-down))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-k") (exwm-evil-command S-C-M-up))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "<C-deletechar>") (exwm-evil-command C-delete))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "<C-backspace>") (exwm-evil-command C-backspace))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-p") #'exwm-evil-core-C-p)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "o") #'exwm-evil-core-C-o)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "J") #'exwm-evil-core-S-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "K") #'exwm-evil-core-S-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-j") #'exwm-evil-core-C-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-j") #'exwm-evil-core-M-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-k") #'exwm-evil-core-C-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-k") #'exwm-evil-core-M-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-M-j") #'exwm-evil-core-C-M-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-M-k") #'exwm-evil-core-C-M-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-j") #'exwm-evil-core-S-C-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-M-j") #'exwm-evil-core-S-M-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-k") #'exwm-evil-core-S-C-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-M-k") #'exwm-evil-core-S-M-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-j") #'exwm-evil-core-S-C-M-down)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "S-C-M-k") #'exwm-evil-core-S-C-M-up)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<C-deletechar>") #'exwm-evil-core-C-delete)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "<C-backspace>") #'exwm-evil-core-C-backspace)
 
-(evil-define-key 'normal exwm-evil-mode-map (kbd "p") (exwm-evil-command C-v))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "y") (exwm-evil-command C-c))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "p") #'exwm-evil-core-C-v)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "y") #'exwm-evil-core-C-c)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "Y") #'exwm-evil-core-copy-all)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "x") (exwm-evil-command backspace))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "+") (exwm-evil-command C-+))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "-") (exwm-evil-command C--))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "=") (exwm-evil-command C-=))
-(evil-define-key 'normal exwm-evil-mode-map (kbd "M-<f4>") (exwm-evil-command M-f4))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "x") #'exwm-evil-core-backspace)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "+") #'exwm-evil-core-C-+)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "-") #'exwm-evil-core-C--)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "=") #'exwm-evil-core-C-=)
+(evil-define-key 'normal exwm-evil-mode-map (kbd "M-<f4>") #'exwm-evil-core-M-f4)
 
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<next>") #'exwm-evil-core-send-this-key)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<prior>") #'exwm-evil-core-send-this-key)
