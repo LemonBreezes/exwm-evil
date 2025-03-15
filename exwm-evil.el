@@ -176,6 +176,10 @@ enabled, Evil's normal state will automatically be entered."
   (interactive)
   (exwm-evil-mode +1))
 
+;;;###autoload
+(defalias 'enable-exwm-evil-mode 'exwm-evil-enable-unconditionally
+  "Alias for `exwm-evil-enable-unconditionally'.")
+
 (define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-normal-state)
 (define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-normal-state)
 

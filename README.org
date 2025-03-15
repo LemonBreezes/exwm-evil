@@ -4,7 +4,6 @@
 #+STARTUP: inlineimages nofold
 
 * Table of Contents :TOC_3:noexport:
-
 - [[#description][Description]]
 - [[#install][Install]]
   - [[#for-users-of-doom-emacs][For users of Doom Emacs]]
@@ -30,7 +29,7 @@ Then, use the following ~use-package~ block:
 (use-package! exwm-evil
   :after exwm
   :config
-  (add-hook 'exwm-manage-finish-hook #'enable-exwm-evil-mode)
+  (add-hook 'exwm-manage-finish-hook #'exwm-evil-enable)
   (cl-pushnew 'escape exwm-input-prefix-keys)
 
   ;; If you want to force enable exwm-evil-mode in any buffer, use:
