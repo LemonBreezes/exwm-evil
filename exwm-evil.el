@@ -3,7 +3,7 @@
 ;; Author: LemonBreezes
 ;; URL: https://github.com/LemonBreezes/exwm-evil
 ;; Version: 1.0
-;; Package-Requires: ((emacs "25.1") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "25.1") (exwm "0.16") (evil "1.0.0"))
 ;; Keywords: extensions
 
 ;; exwm-evil.el is free software; you can redistribute it and/or modify it
@@ -190,7 +190,7 @@ enabled, Evil's normal state will automatically be entered."
 (evil-define-key 'normal exwm-evil-mode-map (kbd "<backtab>") (exwm-evil-command S-tab))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "v") #'exwm-evil-visual-char)
 (evil-define-key 'normal exwm-evil-mode-map (kbd "V") #'exwm-evil-visual-line)
-(evil-define-key 'normal exwm-evil-mode-map (kbd "C-a") (exwm-evil-command ?\C-a))
+(evil-define-key 'normal exwm-evil-mode-map (kbd "C-a") (exwm-evil-command C-a))
 ;; Now bind all modified versions of these keys
 (evil-define-key 'normal exwm-evil-mode-map (kbd "C-p") (exwm-evil-command C-p))
 (evil-define-key 'normal exwm-evil-mode-map (kbd "o") (exwm-evil-command C-o))
