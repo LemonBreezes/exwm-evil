@@ -3,7 +3,7 @@
 ;; Author: LemonBreezes
 ;; URL: https://github.com/LemonBreezes/exwm-evil
 ;; Version: 1.0
-;; Package-Requires: ((emacs "24.4") (exwm "0.16") (evil "1.0.0"))
+;; Package-Requires: ((emacs "25.1") (exwm "0.16") (evil "1.0.0"))
 ;; Keywords: extensions
 
 ;; exwm-evil.el is free software; you can redistribute it and/or modify it
