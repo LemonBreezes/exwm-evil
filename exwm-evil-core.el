@@ -48,7 +48,7 @@ Optional DOC is the docstring for the command."
 ;; Zoom commands
 (exwm-evil-core-define-movement "zoom-in" ?\C-= "Zoom in COUNT times.")
 (exwm-evil-core-define-movement "zoom-out" ?\C-- "Zoom out COUNT times.")
-(exwm-evil-core-define-simple-motion "reset-zoom" ?\C-0 
+(exwm-evil-core-define-simple-motion "reset-zoom" ?\C-0
   "Reset the level of zoom in the current application.")
 
 (evil-define-motion exwm-evil-core-send-this-key (count)
@@ -93,9 +93,9 @@ This sets up the appropriate EXWM input variables."
   (exwm-input--fake-key 'end)
   (exwm-evil-core-insert))
 
-(exwm-evil-core-define-simple-motion "beginning-of-line" home 
+(exwm-evil-core-define-simple-motion "beginning-of-line" home
   "Move backwards to the beginning of the current line.")
-(exwm-evil-core-define-simple-motion "end-of-line" end 
+(exwm-evil-core-define-simple-motion "end-of-line" end
   "Move forwards to the end of the current line.")
 
 (evil-define-motion exwm-evil-core-undo (count)
