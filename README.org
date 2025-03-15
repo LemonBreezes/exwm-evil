@@ -29,7 +29,7 @@ Then, use the following ~use-package~ block:
 (use-package! exwm-evil
   :after exwm
   :config
-  (add-hook 'exwm-manage-finish-hook #'exwm-evil-enable)
+  (add-hook 'exwm-manage-finish-hook #'enable-exwm-evil-mode)
   (cl-pushnew 'escape exwm-input-prefix-keys)
 
   ;; If you want to force enable exwm-evil-mode in any buffer, use:
