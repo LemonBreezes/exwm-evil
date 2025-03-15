@@ -170,11 +170,11 @@ enabled, Evil's normal state will automatically be entered."
   (advice-remove #'exwm-input--on-ButtonPress-line-mode
                  #'exwm-evil--on-ButtonPress-line-mode))
 
+;;;###autoload
 (defun exwm-evil-enable (&rest _)
   "Turns on Evil mode for the current EXWM buffer."
   (interactive)
-  (when (derived-mode-p 'exwm-mode)
-    (exwm-evil-mode +1)))
+  (exwm-evil-mode +1))
 
 (define-key exwm-evil-mode-map [remap evil-normal-state] #'exwm-evil-normal-state)
 (define-key exwm-evil-mode-map [remap evil-force-normal-state] #'exwm-evil-normal-state)
