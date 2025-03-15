@@ -18,6 +18,7 @@
 
 (require 'evil)
 (require 'exwm-input)
+(require 'xcb-xproto)
 
 (defvar exwm-evil-input-delay 0.06
   "The delay between bundled keypresses. If you set it too low, not every key
@@ -129,73 +130,13 @@ state."
   (exwm-input--fake-key ?\C-a)
   (run-at-time exwm-evil-input-delay nil #'exwm-input--fake-key ?\C-c))
 
-(provide 'exwm-evil-core)
-
-(defun exwm-evil-core-do-mouse-click-x-y (x y &optional button-num window-id)
-  "Perform a mouse click at (window relative) position X and Y.
-
-By default BUTTON-NUM is \"1\" (i.e. main click) and the WINDOW-ID is the currently selected window."
-  (let* ((button-index (intern (format "xcb:ButtonIndex:%d" (or button-num 1))))
-         (button-mask (intern (format "xcb:ButtonMask:%d" (or button-num 1))))
-         (window-id (or window-id (exwm--buffer->id
-                                   (window-buffer (selected-window)))
-                        (user-error "No window selected")))
-         (button-actions `((xcb:ButtonPress . ,button-mask)
-                           (xcb:ButtonRelease . 0))))
-    (dolist (b-action button-actions)
-      (xcb:+request exwm--connection
-          (make-instance 'xcb:SendEvent
-                         :propagate 0
-                         :destination window-id
-                         :event-mask xcb:EventMask:NoEvent
-                         :event (xcb:marshal
-                                 (make-instance (car b-action)
-                                                :detail button-index
-                                                :time xcb:Time:CurrentTime
-                                                :root exwm--root
-                                                :event window-id
-                                                :child 0
-                                                :root-x 0
-                                                :root-y 0
-                                                :event-x x
-                                                :event-y y
-                                                :state (cdr b-action)
-                                                :same-screen 0)
-                                 exwm--connection))))
-    (xcb:flush exwm--connection)))
-
-;; Obsolete. Here In case someone still uses it.
-(defun exwm-evil-core-do-mouse-click (button-num)
-  "Perform a left mouse click at the current cursor position."
-  (interactive)
-  (cl-destructuring-bind (mouse-x . mouse-y)
-      (mouse-absolute-pixel-position)
-    (if (provided-mode-derived-p
-         (buffer-local-value 'major-mode
-                             (window-buffer (window-at mouse-x mouse-y)))
-         'exwm-mode)
-        (progn
-          (exwm-evil-insert)
-          (exwm-evil-core-do-mouse-click-x-y mouse-x mouse-y button-num))
-      (call-interactively #'evil-mouse-drag-region))))
-
-(defun exwm-evil--on-ButtonPress-line-mode (buffer button-event)
+(defun exwm-evil--on-ButtonPress-line-mode-a (_)
   "Handle button events in line mode.
 BUFFER is the `exwm-mode' buffer the event was generated
 on. BUTTON-EVENT is the X event converted into an Emacs event.
 
 The return value is used as event_mode to release the original
 button event."
-  (with-current-buffer buffer
-    (let ((read-event (exwm-input--mimic-read-event button-event)))
-      (exwm--log "%s" read-event)
-      (if (and read-event
-               (exwm-input--event-passthrough-p read-event))
-          ;; The event should be forwarded to emacs
-          (progn
-            (exwm-input--cache-event read-event)
-            (exwm-input--unread-event button-event)
+  xcb:Allow:ReplayPointer)
 
-            xcb:Allow:ReplayPointer)
-        ;; The event should be replayed
-        xcb:Allow:ReplayPointer))))
+(provide 'exwm-evil-core)

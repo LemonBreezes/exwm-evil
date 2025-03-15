@@ -176,8 +176,8 @@ enabled, Evil's normal state will automatically be entered."
     ('normal (exwm-evil-normal-state))
     ('insert (exwm-evil-insert)))
   (advice-add #'exwm-input--on-ButtonPress-line-mode
-              :override
-              #'exwm-evil--on-ButtonPress-line-mode))
+              :filter-return
+              #'exwm-evil--on-ButtonPress-line-mode-a))
 
 (defun exwm-evil--teardown ()
   "Clean up EXWM Evil mode in the current buffer."
@@ -185,7 +185,7 @@ enabled, Evil's normal state will automatically be entered."
   (kill-local-variable 'exwm-input-prefix-keys)
   (kill-local-variable 'exwm-evil-visual-state-enabled)
   (advice-remove #'exwm-input--on-ButtonPress-line-mode
-                 #'exwm-evil--on-ButtonPress-line-mode))
+                 #'exwm-evil--on-ButtonPress-line-mode-a))
 
 ;;;###autoload
 (defun enable-exwm-evil-mode (&rest _)
