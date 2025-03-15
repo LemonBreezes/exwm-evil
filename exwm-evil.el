@@ -106,28 +106,36 @@ For example, converts the character \\[control-a] to the string \"exwm-evil-core
 ;; (exwm-evil--get-key-symbol ?\M-z) => "exwm-evil-core-M-z"
 
 (defun exwm-evil-send-key (count key)
-  "Sends KEY to the application COUNT times."
+  "Send KEY to the application COUNT times.
+If `exwm-evil-visual-state-enabled' is non-nil, add shift modifier to KEY."
   (when (and (integerp count) (> count 50))
     (message "Truncating COUNT to 50. Do not use a large COUNT for EXWM Evil commands.")
     (setq count 50))
   (when exwm-evil-visual-state-enabled
-    (setq key (if (symbolp key)
-                  (intern (concat "S-" (symbol-name key)))
-                (aref (kbd (concat "S-" (char-to-string key))) 0))))
+    (setq key (exwm-evil--add-shift-modifier key)))
   (cl-dotimes (i (or count 1))
     (run-at-time (* i exwm-evil-input-delay) nil
                  (lambda (key)
                    (exwm-input--fake-key key))
                  key)))
 
+(defun exwm-evil--add-shift-modifier (key)
+  "Add shift modifier to KEY.
+Works with both symbol keys and character keys."
+  (if (symbolp key)
+      (intern (concat "S-" (symbol-name key)))
+    (aref (kbd (concat "S-" (char-to-string key))) 0)))
+
 ;; (setq exwm-evil-visual-state-enabled nil)
 ;; (aref (kbd (concat "S-" (char-to-string ?\C-t))) 0) => 33554452
 
 (defmacro exwm-evil-command (key)
-  "Defines an EXWM Evil command for KEY."
+  "Define an EXWM Evil command for KEY.
+Creates a motion command that sends KEY to the application."
   `(evil-define-motion
      ,(intern (exwm-evil--get-key-symbol key))
      (count)
+     ,(format "Send %s key to the application COUNT times." key)
      (exwm-evil-send-key
       count
       (if (ignore-errors (integerp ,key)) ,key ',key))))
@@ -140,19 +148,27 @@ The EXWM Evil mode should only be enabled in EXWM buffers. When
 enabled, Evil's normal state will automatically be entered."
   :keymap exwm-evil-mode-map
   (if exwm-evil-mode
-      (progn (pcase (or (alist-get exwm-class-name exwm-evil-initial-state-alist
-                                   nil nil #'string=)
-                        exwm-evil-default-initial-state)
-               ('normal (exwm-evil-normal-state))
-               ('insert (exwm-evil-insert)))
-             (advice-add #'exwm-input--on-ButtonPress-line-mode
-                         :override
-                         #'exwm-evil--on-ButtonPress-line-mode))
-    (kill-local-variable 'exwm-input-line-mode-passthrough)
-    (kill-local-variable 'exwm-input-prefix-keys)
-    (kill-local-variable 'exwm-evil-visual-state-enabled)
-    (advice-remove #'exwm-input--on-ButtonPress-line-mode
-                   #'exwm-evil--on-ButtonPress-line-mode)))
+      (exwm-evil--setup)
+    (exwm-evil--teardown)))
+
+(defun exwm-evil--setup ()
+  "Set up EXWM Evil mode in the current buffer."
+  (pcase (or (alist-get exwm-class-name exwm-evil-initial-state-alist
+                        nil nil #'string=)
+             exwm-evil-default-initial-state)
+    ('normal (exwm-evil-normal-state))
+    ('insert (exwm-evil-insert)))
+  (advice-add #'exwm-input--on-ButtonPress-line-mode
+              :override
+              #'exwm-evil--on-ButtonPress-line-mode))
+
+(defun exwm-evil--teardown ()
+  "Clean up EXWM Evil mode in the current buffer."
+  (kill-local-variable 'exwm-input-line-mode-passthrough)
+  (kill-local-variable 'exwm-input-prefix-keys)
+  (kill-local-variable 'exwm-evil-visual-state-enabled)
+  (advice-remove #'exwm-input--on-ButtonPress-line-mode
+                 #'exwm-evil--on-ButtonPress-line-mode))
 
 (defun exwm-evil-enable (&rest _)
   "Turns on Evil mode for the current EXWM buffer."

@@ -23,79 +23,61 @@
   "The delay between bundled keypresses. If you set it too low, not every key
 press will register.")
 
-(evil-define-motion exwm-evil-core-up (count)
-  "Move up COUNT times."
-  (exwm-evil-send-key count 'up))
+(defmacro exwm-evil-core-define-movement (name key &optional doc)
+  "Define a movement command NAME that sends KEY.
+Optional DOC is the docstring for the command."
+  `(evil-define-motion ,(intern (format "exwm-evil-core-%s" name)) (count)
+     ,(or doc (format "Move %s COUNT times." name))
+     (exwm-evil-send-key count ',key)))
 
-(evil-define-motion exwm-evil-core-down (count)
-  "Move up COUNT times."
-  (exwm-evil-send-key count 'down))
+(exwm-evil-core-define-movement "up" up "Move up COUNT times.")
+(exwm-evil-core-define-movement "down" down "Move down COUNT times.")
+(exwm-evil-core-define-movement "left" left "Move left COUNT times.")
+(exwm-evil-core-define-movement "right" right "Move right COUNT times.")
 
-(evil-define-motion exwm-evil-core-left (count)
-  "Move left COUNT times."
-  (exwm-evil-send-key count 'left))
+(defmacro exwm-evil-core-define-simple-motion (name key &optional doc)
+  "Define a simple motion command NAME that sends KEY.
+Optional DOC is the docstring for the command."
+  `(evil-define-motion ,(intern (format "exwm-evil-core-%s" name)) ()
+     ,(or doc (format "Move to the %s." name))
+     (exwm-input--fake-key ',key)))
 
-(evil-define-motion exwm-evil-core-right (count)
-  "Move right COUNT times."
-  (exwm-evil-send-key count 'right))
+(exwm-evil-core-define-simple-motion "top" home "Move to the top.")
+(exwm-evil-core-define-simple-motion "bottom" end "Move to the bottom.")
 
-(evil-define-motion exwm-evil-core-top ()
-  "Move to the top."
-  (exwm-input--fake-key 'home))
-
-(evil-define-motion exwm-evil-core-bottom ()
-  "Move to the bottom."
-  (exwm-input--fake-key 'end))
-
-(evil-define-motion exwm-evil-core-zoom-in (count)
-  "Zoom in COUNT times."
-  (exwm-evil-send-key count ?\C-=))
-
-(evil-define-motion exwm-evil-core-zoom-out (count)
-  "Zoom out COUNT times."
-  (exwm-evil-send-key count ?\C--))
-
-(evil-define-motion exwm-evil-core-reset-zoom ()
-  "Reset the level of zoom in the current application."
-  (exwm-input--fake-key ?\C-0))
+;; Zoom commands
+(exwm-evil-core-define-movement "zoom-in" ?\C-= "Zoom in COUNT times.")
+(exwm-evil-core-define-movement "zoom-out" ?\C-- "Zoom out COUNT times.")
+(exwm-evil-core-define-simple-motion "reset-zoom" ?\C-0 
+  "Reset the level of zoom in the current application.")
 
 (evil-define-motion exwm-evil-core-send-this-key (count)
   "Send this key to the application COUNT times."
   (exwm-evil-send-key count (aref (this-command-keys-vector) 0)))
 
-(evil-define-motion exwm-evil-core-paste ()
-  "Pastes text from the clipboard."
-  (exwm-input--fake-key ?\C-v))
+;; Clipboard commands
+(exwm-evil-core-define-simple-motion "paste" ?\C-v "Paste text from the clipboard.")
+(exwm-evil-core-define-simple-motion "copy" ?\C-c "Copy selected text to the clipboard.")
+(exwm-evil-core-define-simple-motion "cut" ?\C-x "Cut selected text to the clipboard.")
 
-(evil-define-motion exwm-evil-core-copy ()
-  "Pastes text from the clipboard."
-  (exwm-input--fake-key ?\C-c))
-
-(evil-define-motion exwm-evil-core-cut ()
-  "Pastes text from the clipboard."
-  (exwm-input--fake-key ?\C-x))
-
-(evil-define-motion exwm-evil-core-forward-word (count)
-  "Moves forward COUNT words."
-  (exwm-evil-send-key count 'C-right))
-
-(evil-define-motion exwm-evil-core-backward-word (count)
-  "Moves backward COUNT words."
-  (exwm-evil-send-key count 'C-left))
+(exwm-evil-core-define-movement "forward-word" C-right "Move forward COUNT words.")
+(exwm-evil-core-define-movement "backward-word" C-left "Move backward COUNT words.")
 
 (evil-define-motion exwm-evil-core-quit ()
   "Close the current application."
   (exwm-input--fake-key 'M-f4))
 
 (defun exwm-evil-core-normal ()
-  "Pass every key directly to Emacs."
+  "Enter normal state and pass keys to Emacs.
+This sets up the appropriate EXWM input variables."
   (interactive)
   (setq-local exwm-input-line-mode-passthrough t)
   (kill-local-variable 'exwm-input-prefix-keys)
   (evil-normal-state))
 
 (defun exwm-evil-core-insert ()
-  "Pass every key directly to the application."
+  "Enter insert state and pass keys to the application.
+This sets up the appropriate EXWM input variables."
   (interactive)
   (setq-local exwm-input-line-mode-passthrough nil
               exwm-input-prefix-keys '(escape))
@@ -111,22 +93,16 @@ press will register.")
   (exwm-input--fake-key 'end)
   (exwm-evil-core-insert))
 
-(evil-define-motion exwm-evil-core-beginning-of-line ()
-  "Move backwards to the beginning of the current line."
-  (exwm-input--fake-key 'home))
-
-(evil-define-motion exwm-evil-core-end-of-line ()
-  "Move forwards to the end of the current line."
-  (exwm-input--fake-key 'end))
+(exwm-evil-core-define-simple-motion "beginning-of-line" home 
+  "Move backwards to the beginning of the current line.")
+(exwm-evil-core-define-simple-motion "end-of-line" end 
+  "Move forwards to the end of the current line.")
 
 (evil-define-motion exwm-evil-core-undo (count)
   "Undo COUNT times."
   (exwm-evil-send-key count ?\C-z))
 
-(defun exwm-evil-core-cut ()
-  "Cut text."
-  (interactive)
-  (exwm-input--fake-key ?\C-x))
+;; This function is already defined above with the clipboard commands
 
 (evil-define-motion exwm-evil-core-change ()
   "Delete the selection and switch to insert state."
@@ -156,9 +132,9 @@ state."
 (provide 'exwm-evil-core)
 
 (defun exwm-evil-core-do-mouse-click-x-y (x y &optional button-num window-id)
-  "Perform a mouse click at (window relative) position X and Y
+  "Perform a mouse click at (window relative) position X and Y.
 
-By default BUTTON-NUM is ``1'' (i.e. main click) and the WINDOW-ID is the currently selected window."
+By default BUTTON-NUM is \"1\" (i.e. main click) and the WINDOW-ID is the currently selected window."
   (let* ((button-index (intern (format "xcb:ButtonIndex:%d" (or button-num 1))))
          (button-mask (intern (format "xcb:ButtonMask:%d" (or button-num 1))))
          (window-id (or window-id (exwm--buffer->id
