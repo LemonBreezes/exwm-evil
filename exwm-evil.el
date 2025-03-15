@@ -37,11 +37,12 @@
 (defvar exwm-evil-input-delay 0.01
   "Delay between sending keys to the application.")
 (defvar exwm-evil-visual-state-enabled nil
-  "This variable determines whether we are currently entering keys with shift held.")
+  "This variable determines whether we are currently entering keys with shift held.
+When non-nil, keys will be sent with shift modifier.")
 
 (defcustom exwm-evil-initial-state-alist nil
-  "A mapping of EXWM class names to Evil initial state. Only
-`normal' and `insert' are currently supported."
+  "A mapping of EXWM class names to Evil initial state.
+Only `normal' and `insert' are currently supported."
   :type '(alist :key-type string :value-type symbol)
   :group 'exwm-evil)
 
@@ -78,7 +79,7 @@
               (not exwm-evil-visual-state-enabled)))
 
 (defun exwm-evil-visual-line ()
-  "Emulate `evil-visual-line' using keybindings."
+  "Emulate the function `evil-visual-line' using keybindings."
   (interactive)
   (when (not exwm-evil-visual-state-enabled)
     (exwm-input--fake-key 'home)
@@ -88,7 +89,7 @@
 
 (defun exwm-evil--get-key-symbol (key)
   "Convert KEY to a symbol name for use in function names.
-For example, converts the character C-a to the string \"exwm-evil-core-C-a\"."
+For example, converts the character \\[control-a] to the string \"exwm-evil-core-C-a\"."
   (concat "exwm-evil-core-"
           (if (ignore-errors (integerp key))
               (cond ((<= ?\C-a key ?\C-z)
