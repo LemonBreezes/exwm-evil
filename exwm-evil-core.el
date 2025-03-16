@@ -18,7 +18,6 @@
 
 (require 'evil)
 (require 'exwm-input)
-(require 'xcb-xproto)
 
 (defvar exwm-evil-input-delay 0.06
   "The delay between bundled keypresses. If you set it too low, not every key
@@ -137,6 +136,6 @@ on. BUTTON-EVENT is the X event converted into an Emacs event.
 
 The return value is used as event_mode to release the original
 button event."
-  xcb:Allow:ReplayPointer)
+  (bound-and-true-p xcb:Allow:ReplayPointer))
 
 (provide 'exwm-evil-core)
