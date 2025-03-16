@@ -26,10 +26,7 @@
 
 ;;; Code:
 (require 'evil)
-(require 'evil-core)
-(require 'exwm)
 (require 'exwm-evil-core)
-(require 'exwm-input)
 
 (defvar exwm-evil-mode-map (make-sparse-keymap)
   "Keymap for `exwm-evil-mode'.")
