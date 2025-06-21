@@ -52,6 +52,7 @@ Only `normal' and `insert' are currently supported."
   "Send this key to the application COUNT times."
   (exwm-evil-send-key count (aref (this-command-keys-vector) 0)))
 
+;;;###autoload
 (defun exwm-evil-normal-state ()
   "Pass every key directly to Emacs."
   (interactive)
